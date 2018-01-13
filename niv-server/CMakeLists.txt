@@ -1,14 +1,17 @@
-project(server CXX)
+project(niv-server CXX)
 include("${PROJECT_SOURCE_DIR}/manifest.cmake")
 # to find include_dir
-include_directories(SYSTEM "${REPO_DIRECTORY}/restbed/install/include")
-include_directories(SYSTEM "${REPO_DIRECTORY}/boost/boost_1_55_0")
+include_directories(SYSTEM "${PROJECT_SOURCE_DIR}/../restbed/install/include")
+include_directories(SYSTEM "${BOOST_PATH}")
+# include_directories(SYSTEM "${PROJECT_SOURCE_DIR}/../install/include")
 
 add_executable( ${PROJECT_NAME} ${MANIFEST} )
 
-target_link_libraries( ${PROJECT_NAME} "${REPO_DIRECTORY}/restbed/install/library/restbed.lib" "${REPO_DIRECTORY}/ubiquitous-potato/build/references-lib/Debug/references-lib.lib")
+# target_link_libraries( ${PROJECT_NAME} references-lib )
+target_link_libraries( ${PROJECT_NAME} "${PROJECT_SOURCE_DIR}/../restbed/install/library/restbed.lib" "${PROJECT_SOURCE_DIR}/../build/references-lib/Debug/references-lib.lib")
 target_include_directories(${PROJECT_NAME} PUBLIC ${INCLUDE_DIR})
 
+link_directories("${PROJECT_SOURCE_DIR}/../restbed/install/library")
 #
 # Install
 #

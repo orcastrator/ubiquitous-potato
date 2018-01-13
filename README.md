@@ -4,7 +4,7 @@ Uses Bible verses stored in JSON format
 Includes mechanism for parsing reference strings
 
 To set up project:
- - cmake .. -DREPO_DIRECTORY=/path/to/repo/directory
+ - cmake .. -DBOOST_PATH=/path/to/boost/directory
 
 To build:
  - cmake --build .

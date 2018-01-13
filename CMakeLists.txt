@@ -1,17 +1,17 @@
 cmake_minimum_required( VERSION 3.10.1 )
 
-project( my-rest-server CXX )
-set( my-rest-server_VERSION_MAJOR 0 )
-set( my-rest-server_VERSION_MINOR 1.0 )
-set( my-rest-server_VERSION ${my-rest-server_VERSION_MAJOR}.${my-rest-server_VERSION_MINOR} )
-set( PACKAGE_VERSION ${my-rest-server_VERSION} )
-set( VERSION "${my-rest-server_VERSION}" )
+project( server CXX )
+set( server_VERSION_MAJOR 0 )
+set( server_VERSION_MINOR 1.0 )
+set( server_VERSION ${server_VERSION_MAJOR}.${server_VERSION_MINOR} )
+set( PACKAGE_VERSION ${server_VERSION} )
+set( VERSION "${server_VERSION}" )
 
 # CMAKE_SOURCE_DIR the directory which contains the top-level CMakeLists.txt, i.e. the top level source directory
 include_directories(SYSTEM ${CMAKE_SOURCE_DIR})
 
-if(NOT EXISTS ${REPO_DIRECTORY})
-    message( FATAL_ERROR "repo directory at '${REPO_DIRECTORY}' does not exist")
+if(NOT EXISTS ${BOOST_PATH})
+    message( FATAL_ERROR "Unable to find boost libraries at: '${BOOST_PATH}'")
 endif()
 
 # PROJECT_SOURCE_DIR contains the full path to the root of your project source directory, i.e. to the nearest directory where CMakeLists.txt contains the PROJECT() command
@@ -33,13 +33,13 @@ set(CMAKE_CXX_FLAGS_DEBUG "/MTd")
 
 foreach(module
   references-lib
-  server
+  niv-server
 )
 add_subdirectory(${module})
 endforeach()
 
 if ( BUILD_SHARED )
-    set_target_properties( ${PROJECT_NAME} PROPERTIES SOVERSION ${my-rest-server_VERSION_MAJOR} VERSION ${my-rest-server_VERSION} )
+    set_target_properties( ${PROJECT_NAME} PROPERTIES SOVERSION ${server_VERSION_MAJOR} VERSION ${server_VERSION} )
 endif ( )
 
 #

@@ -20,8 +20,6 @@ public:
 	static const std::regex singleVerse;
 	static const std::regex multiVerseSingleChapter;
 	static const std::regex multiVerseMultiChapter;
-private:
-
 };
 
 #endif REFERENCES_H
