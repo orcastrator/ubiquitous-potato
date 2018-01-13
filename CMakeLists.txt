@@ -43,6 +43,7 @@ endif()
 foreach(module
   references-lib
   niv-server
+  autobackup-service
 )
 add_subdirectory(${module})
 endforeach()
