@@ -27,6 +27,8 @@ target_include_directories(${PROJECT_NAME} PUBLIC ${INCLUDE_DIR})
         # ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
         # COMPONENT library )
 
+install(TARGETS references-lib ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}")
+
 target_link_libraries(${PROJECT_NAME})
 
 # Expose B's public includes (including Boost transitively) to other

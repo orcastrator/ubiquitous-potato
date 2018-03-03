@@ -6,6 +6,7 @@
 #include <restbed>
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/algorithm/string.hpp>
+#include <docopt/docopt.h>
 
 #include <references-lib/references.h>
 
@@ -98,12 +99,38 @@ std::shared_ptr<restbed::Resource> createHandler(std::string path, std::string m
 }
 
 int main(int argC, char* argV[]) {
-	int port;
-	std::cin >> port;
-	std::string pathToBible;
-	std::cin >> pathToBible;
+	std::string usage = R"(NIV 1984 Server
+	Usage:
+		niv-server [--config-path=<path> --port=<port> --path-to-bible=<bib>]
+		niv-server (-h | --help)
+		niv-server --version
+
+	Options:
+		--config-path=<path>	Path to config file in json format
+		--port=<port>			Port where REST API will be served [default: 7015]
+		--path-to-bible=<bib>	Location of Bible file in json format
+		-h --help				Show this screen.
+		--version				Show version.
+)";
+
+	std::map<std::string, docopt::value> args = docopt::docopt(
+		usage,
+		{ argV + 1, argV + argC },
+		true,	// show help if requested
+		"1.0");	// version string
+
+	std::string configPath = args["--config-path"] ? args["--config-path"].asString() : "";
+	int port = args["--port"] ? args["--port"].asLong() : 4000;
+	std::string pathToBible = args["--path-to-bible"] ? args["--path-to-bible"].asString() : "";
+
 	std::cout << "Reading Bible from path: " << pathToBible << std::endl;
-	boost::property_tree::read_json(pathToBible, root);
+	try {
+		boost::property_tree::read_json(pathToBible, root);
+	}
+	catch (const std::exception& e) {
+		std::cerr << "Unable to parse bible json file: " << e.what() << std::endl;
+		return 1;
+	}
 
 	std::vector<std::shared_ptr<restbed::Resource>> handlers;
 	

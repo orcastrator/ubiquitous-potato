@@ -7,6 +7,8 @@ set( server_VERSION ${server_VERSION_MAJOR}.${server_VERSION_MINOR} )
 set( PACKAGE_VERSION ${server_VERSION} )
 set( VERSION "${server_VERSION}" )
 
+include(GNUInstallDirs)
+
 # CMAKE_SOURCE_DIR the directory which contains the top-level CMakeLists.txt, i.e. the top level source directory
 include_directories(SYSTEM ${CMAKE_SOURCE_DIR})
 
@@ -24,6 +26,8 @@ endif()
 # option( BUILD_TESTS    "Build all available test suites."   OFF )
 
 # use multithreaded debugging
+message("CMAKE BUILD TYPE: ${CMAKE_BUILD_TYPE}")
+
 set(CMAKE_CXX_FLAGS_DEBUG "/MTd")
 
 #
