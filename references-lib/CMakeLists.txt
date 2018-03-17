@@ -20,13 +20,6 @@ target_include_directories(${PROJECT_NAME} PUBLIC ${INCLUDE_DIR})
     # set( CMAKE_INSTALL_LIBDIR "../install/library" )
 # endif ( )
 
-# install( FILES "${INCLUDE_DIR}/${PROJECT_NAME}" DESTINATION "${CMAKE_INSTALL_PREFIX}/include" )
-# install( FILES ${ARTIFACTS} DESTINATION "${CMAKE_INSTALL_PREFIX}/include/corvusoft/${PROJECT_NAME}" )
-# install( TARGETS ${PROJECT_NAME}
-        # LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        # ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        # COMPONENT library )
-
 install(TARGETS references-lib ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}")
 
 target_link_libraries(${PROJECT_NAME})

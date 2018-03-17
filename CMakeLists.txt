@@ -25,10 +25,15 @@ endif()
 # option( BUILD_EXAMPLES "Build examples applications."       OFF )
 # option( BUILD_TESTS    "Build all available test suites."   OFF )
 
-# use multithreaded debugging
-message("CMAKE BUILD TYPE: ${CMAKE_BUILD_TYPE}")
 
-set(CMAKE_CXX_FLAGS_DEBUG "/MTd")
+message("CMAKE BUILD TYPE: ${CMAKE_BUILD_TYPE}")
+if(MSVC)
+  # use multithreaded debugging
+  set(CMAKE_CXX_FLAGS_DEBUG "/MTd")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zi")
+else()
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
+endif()
 
 #
 # Build
@@ -54,7 +59,3 @@ endif ( )
 if ( NOT DEFINED CMAKE_INSTALL_LIBDIR )
     set( CMAKE_INSTALL_LIBDIR library )
 endif ( )
-
-# install( FILES "${INCLUDE_DIR}/${PROJECT_NAME}" DESTINATION "${CMAKE_INSTALL_PREFIX}/include" )
-# install( FILES ${ARTIFACTS} DESTINATION "${CMAKE_INSTALL_PREFIX}/include/corvusoft/${PROJECT_NAME}" )
-# install( TARGETS ${PROJECT_NAME} LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT library )
