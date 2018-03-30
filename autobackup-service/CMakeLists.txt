@@ -1,7 +1,7 @@
 project(autobackup-service CXX)
 include("${PROJECT_SOURCE_DIR}/manifest.cmake")
 # to find include_dir
-include_directories(SYSTEM "${BOOST_PATH}")
+include_directories(SYSTEM "${PROJECT_SOURCE_DIR}")
 
 if(MSVC)
   # use multithreaded debugging
