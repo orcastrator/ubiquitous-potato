@@ -16,6 +16,8 @@ if(NOT EXISTS ${BOOST_PATH})
     message( FATAL_ERROR "Unable to find boost libraries at: '${BOOST_PATH}'")
 endif()
 
+set( DOCOPT_PATH "${CMAKE_SOURCE_DIR}/docopt.cpp/install" )
+
 # PROJECT_SOURCE_DIR contains the full path to the root of your project source directory, i.e. to the nearest directory where CMakeLists.txt contains the PROJECT() command
 
 #

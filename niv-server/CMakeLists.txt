@@ -1,7 +1,7 @@
 project(niv-server CXX)
 include("${PROJECT_SOURCE_DIR}/manifest.cmake")
 
-LIST(APPEND CMAKE_PROGRAM_PATH  "${DOCOPT_PATH}/lib")
+LIST(APPEND CMAKE_PROGRAM_PATH "${DOCOPT_PATH}/lib")
 
 # to find include_dir
 include_directories(SYSTEM "${PROJECT_SOURCE_DIR}/../restbed/build/include")
