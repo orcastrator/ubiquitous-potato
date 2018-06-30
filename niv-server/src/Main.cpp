@@ -59,7 +59,7 @@ void get_bible_verses_handler(const std::shared_ptr<restbed::Session>& session) 
 			if (i == std::get<1>(referenceEnds.second))
 				verseEnd = std::get<2>(referenceEnds.second); // last chapter does not always end at end of chapter
 			else
-				verseEnd = 176; // magic number for number of verses in psalm 119
+				verseEnd = BibleReference::maxVersesInChapter; // magic number for number of verses in psalm 119
 			for (int j = verseBegin; j <= verseEnd; j++) {
 				std::string ref;
 				try {
@@ -70,7 +70,7 @@ void get_bible_verses_handler(const std::shared_ptr<restbed::Session>& session) 
 					std::cout << e.what() << std::endl;
 					// Get possible corrections
 					std::string correction = BibleReference::correction(booksOfTheBible, std::get<0>(referenceEnds.first));
-					if (correction.size() > 1)
+					if (!correction.empty())
 						content = "Unable to find " + std::get<0>(referenceEnds.first) + ". Did you mean " + correction + "?";
 					if (content.empty())
 						content = "Unable to find verse at the provided reference: " + reference;
@@ -81,6 +81,7 @@ void get_bible_verses_handler(const std::shared_ptr<restbed::Session>& session) 
 					content += verse + " ";
 				}
 				catch (std::exception& e) {
+					std::cout << e.what() << std::endl;
 					if (content.empty())
 						content = "Unable to find verse at the provided reference: " + reference;
 					break;

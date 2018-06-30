@@ -20,8 +20,13 @@ public:
 	static const std::regex validReference;
 	// TODO: check if reference format is valid
 	static const std::regex singleVerse;
+	static const std::regex wholeChapter;
+	static const std::regex wholeMultiChapter;
 	static const std::regex multiVerseSingleChapter;
 	static const std::regex multiVerseMultiChapter;
+
+	static const size_t maxVersesInChapter = 176;
+	static const size_t maxChapterInBook = 150;
 
 private:
 	static std::vector<std::string> known(std::vector<std::string> referenceList, std::vector<std::string> inputList);
