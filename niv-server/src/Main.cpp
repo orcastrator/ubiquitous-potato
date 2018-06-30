@@ -11,6 +11,7 @@
 #include <references-lib/references.h>
 
 boost::property_tree::ptree root;
+std::vector<std::string> booksOfTheBible;
 
 void hello_handler(const std::shared_ptr<restbed::Session>& session) {
 	const auto request = session->get_request();
@@ -60,20 +61,50 @@ void get_bible_verses_handler(const std::shared_ptr<restbed::Session>& session) 
 			else
 				verseEnd = 176; // magic number for number of verses in psalm 119
 			for (int j = verseBegin; j <= verseEnd; j++) {
+				std::string ref;
 				try {
-					std::string ref = std::get<0>(referenceEnds.first) + "." + std::to_string(i) + "." + std::to_string(j);
+					ref = std::get<0>(referenceEnds.first) + "." + std::to_string(i) + "." + std::to_string(j);
+					std::string testBookName = root.get<std::string>(std::get<0>(referenceEnds.first));
+				}
+				catch (std::exception& e) {
+					std::cout << e.what() << std::endl;
+					// Get possible corrections
+					std::string correction = BibleReference::correction(booksOfTheBible, std::get<0>(referenceEnds.first));
+					if (correction.size() > 1)
+						content = "Unable to find " + std::get<0>(referenceEnds.first) + ". Did you mean " + correction + "?";
+					if (content.empty())
+						content = "Unable to find verse at the provided reference: " + reference;
+					break;
+				}
+				try {
 					std::string verse = root.get<std::string>(ref);
 					content += verse + " ";
 				}
 				catch (std::exception& e) {
-					std::cout << e.what() << std::endl;
+					if (content.empty())
+						content = "Unable to find verse at the provided reference: " + reference;
 					break;
 				}
 			}
 			content += "\r\n \r\n \r\n";
 		}
-		if (content.empty())
-			content = "Unable to find verse at the provided reference";
+		session->close(restbed::OK, content, { { "Content-Length", std::to_string(content.length()) },{ "Connection", "close" } });
+	});
+}
+
+void get_bible_books_handler(const std::shared_ptr<restbed::Session>& session) {
+	const auto request = session->get_request();
+
+	size_t content_length = request->get_header("Content-Length", 0);
+
+	session->fetch(content_length, [request](const std::shared_ptr<restbed::Session> session, const restbed::Bytes & body)
+	{
+		std::string content = "";
+		for (const auto &book : booksOfTheBible) {
+			content += book;
+			content += "\n";
+		}
+
 		session->close(restbed::OK, content, { { "Content-Length", std::to_string(content.length()) },{ "Connection", "close" } });
 	});
 }
@@ -85,7 +116,8 @@ void get_help_handler(const std::shared_ptr<restbed::Session>& session) {
 
 	session->fetch(content_length, [request](const std::shared_ptr<restbed::Session> session, const restbed::Bytes & body)
 	{
-		std::string content = "To use this website, navigate to /verses?reference=<insert-reference-here>\nFor example: /verses?reference=Genesis 1:1\n";
+		std::string content = "To use this website, navigate to /verses?reference=<insert-reference-here>\nFor example: /verses?reference=Genesis 1:1\n\
+To retrieve a list of the books of the bible, navigate to /books";
 
 		session->close(restbed::OK, content, { { "Content-Length", std::to_string(content.length()) },{ "Connection", "close" } });
 	});
@@ -107,7 +139,7 @@ int main(int argC, char* argV[]) {
 
 	Options:
 		--config-path=<path>	Path to config file in json format
-		--port=<port>			Port where REST API will be served [default: 7015]
+		--port=<port>			Port where REST API will be served [default: 4000]
 		--path-to-bible=<bib>	Location of Bible file in json format
 		-h --help				Show this screen.
 		--version				Show version.
@@ -126,6 +158,9 @@ int main(int argC, char* argV[]) {
 	std::cout << "Reading Bible from path: " << pathToBible << std::endl;
 	try {
 		boost::property_tree::read_json(pathToBible, root);
+		for (const auto &book : root.get_child("")) {
+			booksOfTheBible.push_back(book.first.data());
+		}
 	}
 	catch (const std::exception& e) {
 		std::cerr << "Unable to parse bible json file: " << e.what() << std::endl;
@@ -137,6 +172,7 @@ int main(int argC, char* argV[]) {
 	handlers.push_back(createHandler("/hello", "GET", hello_handler));
 	handlers.push_back(createHandler("/verse", "GET", get_bible_verse_handler));
 	handlers.push_back(createHandler("/verses", "GET", get_bible_verses_handler));
+	handlers.push_back(createHandler("/books", "GET", get_bible_books_handler));
 	handlers.push_back(createHandler("/help", "GET", get_help_handler));
 
 	auto settings = std::make_shared<restbed::Settings>();

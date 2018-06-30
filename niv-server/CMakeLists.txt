@@ -13,7 +13,8 @@ add_dependencies( ${PROJECT_NAME} "references-lib" )
 
 target_link_libraries( ${PROJECT_NAME}
                     "${PROJECT_SOURCE_DIR}/../restbed/build/library/restbed.lib"
-                    "${PROJECT_SOURCE_DIR}/../install/lib/references-lib.lib"
+                    # "${PROJECT_SOURCE_DIR}/../install/lib/references-lib.lib"
+                    "${PROJECT_SOURCE_DIR}/../build/references-lib/Debug/references-lib.lib"
                     "${DOCOPT_PATH}/lib/docopt.lib"
                     )
 target_include_directories(${PROJECT_NAME} PUBLIC ${INCLUDE_DIR})
